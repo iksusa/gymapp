@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Тренажерный зал</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQXK1xBCm2PcGUcziNkZmUluwJ6hI+4Vz07Pl18f" crossorigin="anonymous">
+</head>
+<body>
+  <div class="container mt-5">
+    <h1>Расписание тренировок</h1>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Название</th>
+          <th scope="col">Дата</th>
+          <th scope="col">Продолжительность</th>
+          <th scope="col">Тренер</th>
+        </tr>
+      </thead>
+      <tbody id="trainings-table"></tbody>
+    </table>
+
+    <!-- Форма для добавления новой тренировки -->
+    <form id="add-training-form">
+      <div class="mb-3">
+        <label for="training-name" class="form-label">Название тренировки</label>
+        <input type="text" class="form-control" id="training-name" required>
+      </div>
+      <div class="mb-3">
+        <label for="training-date" class="form-label">Дата и время</label>
+        <input type="datetime-local" class="form-control" id="training-date" required>
+      </div>
+      <div class="mb-3">
+        <label for="training-duration" class="form-label">Продолжительность (мин.)</label>
+        <input type="number" class="form-control" id="training-duration" min="1" max="240" required>
+      </div>
+      <div class="mb-3">
+        <label for="training-coach" class="form-label">Тренер</label>
+        <input type="text" class="form-control" id="training-coach" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Добавить тренировку</button>
+    </form>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" integrity="sha512-SOuukMl73tSPLhhLlvniocstON70GGXjweB2YfvnRt/R9u8P+pXnFwKZERczWjGy9q/iGg4vmPFHxvkuKMKpJQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    $(document).ready(function() {
+      $.getJSON('http://localhost:3000/trainings', function(data) {
+        let rows = '';
+        data.trainings.forEach(training => {
+          rows += <tr><td>${training.name}</td><td>${new Date(training.date).toLocaleString()}</td><td>${training.duration} мин.</td><td>${training.coach}</td></tr>;
+        });
+        $('#trainings-table').html(rows);
+      });
+
+      $('#add-training-form').on('submit', function(e) {
+        e.preventDefault();
+        const formData = {
+          name: $('#training-name').val(),
+          date: $('#training-date').val(),
+          duration: parseInt($('#training-duration').val()),
+          coach: $('#training-coach').val()
+        };
+
+        $.post('http://localhost:3000/trainings', formData)
+          .done(function(response) {
+            alert('Тренировка успешно добавлена!');
+            location.reload(); // Перезагружаем страницу после успешного добавления
+          })
+          .fail(function(error) {
+            alert('Произошла ошибка при добавлении тренировки.');
+          });
+      });
+    });
+  </script>
+</body>
+</html>

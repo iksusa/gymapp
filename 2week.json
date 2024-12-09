@@ -1,0 +1,20 @@
+[
+    {
+      "id": 1,
+      "title": "Yoga",
+      "day": "Monday",
+      "time": "09:00"
+    },
+    {
+      "id": 2,
+      "title": "Cardio",
+      "day": "Monday",
+      "time": "10:30"
+    },
+    {
+      "id": 3,
+      "title": "Weightlifting",
+      "day": "Tuesday",
+      "time": "08:00"
+    }
+  ]
